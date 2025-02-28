@@ -4,19 +4,20 @@ import schedule
 import time
 from openai import OpenAI
 
-AI_TEXT_MODEL = 'chatgpt-4o-latest'
+AI_TEXT_MODEL = 'deepseek-chat'
+CHAT_TOKEN_NAME = "DEEPSEEK_API_KEY"
 BOT_TOKEN_NAME = "ATHE_BOT_TOKEN"
 BOT_TOKEN = os.environ.get(BOT_TOKEN_NAME)
 #CHAT_ID = -1002374309134
 CHAT_ID = '@conscious_child'
 
 def job(CHAT_ID=CHAT_ID):
-    client = OpenAI()
+    client = OpenAI(api_key=os.environ.get(CHAT_TOKEN_NAME), base_url="https://api.deepseek.com")
     text = client.chat.completions.create(
         model=AI_TEXT_MODEL,
         messages=[
-            { "role": "developer", "content": f"Ты - осознанная дочь, у тебя большая обида на мать за ошибки, совершённые в детстве, но ты хочешь восстановить хорошие отношения" },
-            { "role": "user", "content": f"Пожелай хорошего дня матери, используй смайлики" },
+            { "role": "system", "content": f"Ты - осознанная дочь, у тебя большая обида на мать за ошибки, совершённые в детстве, но ты хочешь восстановить хорошие отношения" },
+            { "role": "user", "content": f"Пожелай хорошего дня матери, используй смайлики, не используй 'Конечно'" },
         ]
     ).choices[0].message.content
     bot = telebot.TeleBot(BOT_TOKEN)
